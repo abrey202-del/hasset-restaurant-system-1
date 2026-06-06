@@ -19,6 +19,26 @@ exports.createOrder = async (req, res) => {
        RETURNING *`,
       [orderNumber, table_number, total_amount, notes || null]
     );
+    exports.getKitchenOrders = async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT *
+      FROM orders
+      WHERE status IN ('pending', 'preparing', 'ready')
+      ORDER BY created_at ASC
+    `);
+
+    res.json({
+      success: true,
+      orders: result.rows,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
     const order = orderResult.rows[0];
 
@@ -102,6 +122,26 @@ exports.updateOrderStatus = async (req, res) => {
     res.json({
       success: true,
       order: result.rows[0],
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+exports.getKitchenOrders = async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT *
+      FROM orders
+      WHERE status IN ('pending', 'preparing', 'ready')
+      ORDER BY created_at ASC
+    `);
+
+    res.json({
+      success: true,
+      orders: result.rows,
     });
   } catch (error) {
     res.status(500).json({

@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS orders (
+  id SERIAL PRIMARY KEY,
+  order_number VARCHAR(50) UNIQUE NOT NULL,
+  table_number VARCHAR(20) NOT NULL,
+  status VARCHAR(20) DEFAULT 'pending',
+  total_amount DECIMAL(10,2) NOT NULL,
+  notes TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS order_items (
+  id SERIAL PRIMARY KEY,
+  order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
+  item_name VARCHAR(255) NOT NULL,
+  quantity INTEGER NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  subtotal DECIMAL(10,2) NOT NULL
+);
